@@ -141,12 +141,13 @@ class Provider extends AbstractProvider
     private function buildUrl()
     {
         $realm = $this->getConfig('realm', $this->request->server('HTTP_HOST'));
+        $protocol = env('APP_IS_PROXIED', true) ? 'https' : $this->request->getScheme();
 
         $params = [
             'openid.ns'         => self::OPENID_NS,
             'openid.mode'       => 'checkid_setup',
             'openid.return_to'  => $this->redirectUrl,
-            'openid.realm'      => sprintf('%s://%s', $this->request->getScheme(), $realm),
+            'openid.realm' => sprintf('%s://%s', $protocol, $realm),
             'openid.identity'   => 'http://specs.openid.net/auth/2.0/identifier_select',
             'openid.claimed_id' => 'http://specs.openid.net/auth/2.0/identifier_select',
         ];
